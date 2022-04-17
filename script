@@ -1,0 +1,152 @@
+local StarterGui = game:GetService("StarterGui")
+local Player = game.Players.LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local teleportationOffset = 5
+
+function notification(title, text, duration)
+	StarterGui:SetCore("SendNotification", {
+		Title = title,
+		Text = text,
+		Duration = duration
+	})
+end
+
+
+if game.PlaceId == 7167319176 then
+    notification("GUI", "GUI loaded successfully!", 5)
+    local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+    local Window = Library.CreateLib("Chicago Remastered", "DarkTheme")
+    local Combat = Window:NewTab("Combat")
+    local Player = Window:NewTab("Player")
+    local Visuals = Window:NewTab("Visuals")
+    local PlayerSection = Player:NewSection("Teleporting")
+    local WalkspeedSection = Player:NewSection("Walkspeed")
+    local AimbotSection = Combat:NewSection("Aimbot")
+    local ESPSection = Visuals:NewSection("ESP")
+    local difference = false
+
+    ESPSection:NewButton("ESP", "Enables or disables ESP.", function()
+        if difference == false then
+            difference = true
+            
+
+
+local esp_settings = { ---- table for esp settings 
+    textsize = 16,
+    colour = 255,255,255
+}
+
+gui = Instance.new("BillboardGui")
+esp = Instance.new("TextLabel",gui) ---- new instances to make the billboard gui and the textlabel
+
+
+
+gui.Name = "ESP"; ---- properties of the esp
+gui.ResetOnSpawn = false
+gui.AlwaysOnTop = true;
+gui.LightInfluence = 0;
+gui.Size = UDim2.new(1.75, 0, 1.75, 0);
+esp.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+esp.Text = ""
+esp.Size = UDim2.new(0.0001, 0.00001, 0.0001, 0.00001);
+esp.BorderSizePixel = 4;
+esp.BorderColor3 = Color3.new(esp_settings.colour)
+esp.BorderSizePixel = 0
+esp.Font = "GothamSemibold"
+esp.TextSize = esp_settings.textsize
+esp.TextColor3 = Color3.fromRGB(esp_settings.colour) -- text colour
+
+game:GetService("RunService").RenderStepped:Connect(function() ---- loops faster than a while loop :)
+    for i,v in pairs (game:GetService("Players"):GetPlayers()) do
+        if v ~= game:GetService("Players").LocalPlayer and v.Character.Head:FindFirstChild("ESP")==nil  then -- craeting checks for team check, local player etc
+            esp.Text = "{"..v.Name.."}"
+            gui:Clone().Parent = v.Character.Head
+    end
+end
+end)
+        else
+            difference = false
+            gui:Destroy()
+            esp:Destroy()
+        end
+    end)
+
+    AimbotSection:NewKeybind("Aimbot", "Aimbotting toggle", Enum.KeyCode.Q, function()
+        local mouse = Playeqr:GetMouse()
+        local stopAimbot = false
+        local camera = workspace.CurrentCamera
+        local uis = game:GetService("UserInputService")
+        local dif = false
+        local startergui = game:GetService("StarterGui")
+
+        function aimbotting(target)
+            if stopAimbot == false then
+                while wait() do
+                    if stopAimbot == false and target and target.Parent:FindFirstChild("Humanoid") then
+                        camera.CFrame = CFrame.new(camera.CFrame.Position,target.Position)
+                    else
+                        repeat wait()
+                            stopAimbot = false
+                        until stopAimbot == false
+                        break
+                    end
+                end
+            else
+                print("no")
+            end
+        end
+
+
+        uis.InputEnded:Connect(function(input)
+            if input.KeyCode == Enum.KeyCode.Q then
+                if mouse.Target and mouse.Target ~= nil and mouse.Target.Parent:FindFirstChild("Humanoid") then
+                    local target = mouse.Target.Parent:FindFirstChild("Head")
+                    
+                    if dif == false then
+                        dif = true
+                        notification("Aimbot", "Aimbot enabled!", 2)
+                        aimbotting(target)
+                    else
+                        dif = false
+                        stopAimbot = true
+                        notification("Aimbot", "Aimbot disabled!", 2)
+                    end
+                end
+            end
+        end)
+    end)
+    
+
+    WalkspeedSection:NewSlider("Walkspeed", "Changes the walkspeed of your character.", 125, 16, function(s) -- 125 (MaxValue) | 0 (MinValue)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
+    end)
+    PlayerSection:NewButton("Bank", "Teleports you to the bank.", function()
+        Character:WaitForChild("HumanoidRootPart").CFrame = workspace.Map.Buildings.Bank["chair 2"].seat.Part.CFrame * CFrame.new(0, teleportationOffset, 0)
+    end)
+    PlayerSection:NewButton("Jewelry", "Teleports you to the jewelry.", function()
+        Character:WaitForChild("HumanoidRootPart").CFrame = workspace.Map.Buildings.Jewelry.Rob.glass.Part.CFrame * CFrame.new(0, teleportationOffset, 0)
+    end)
+    PlayerSection:NewButton("Gun Shop", "Teleports you to the Gun Shop.", function()
+        Character:WaitForChild("HumanoidRootPart").CFrame = workspace.Map.NPCs.GunstoreNPC.HumanoidRootPart.CFrame * CFrame.new(0, teleportationOffset, -5)
+    end)
+    PlayerSection:NewButton("Gas Station", "Teleports you to the Gas Station.", function()
+        Character:WaitForChild("HumanoidRootPart").CFrame = workspace.Map.NPCs.GasStationNPC.HumanoidRootPart.CFrame * CFrame.new(0, teleportationOffset, -5)
+    end)
+    PlayerSection:NewButton("Bike Shop", "Teleports you to the Bike Shop.", function()
+        Character:WaitForChild("HumanoidRootPart").CFrame = workspace.Map.NPCs.BikeNPC.HumanoidRootPart.CFrame * CFrame.new(0, teleportationOffset, -5)
+    end)
+    PlayerSection:NewButton("Bodega Job", "Teleports you to the bodega job.", function()
+        Character:WaitForChild("HumanoidRootPart").CFrame = workspace.Map.Jobs.Bodega.Pickup.Boxes.CFrame * CFrame.new(0, teleportationOffset, 0)
+    end)
+    PlayerSection:NewButton("Delivery Job", "Teleports you to the delivery job.", function()
+        Character:WaitForChild("HumanoidRootPart").CFrame = workspace.Map.Jobs.Deliver.Pickup.Graffiti.CFrame * CFrame.new(0, teleportationOffset, 0)
+    end)
+    PlayerSection:NewButton("Bartender Job", "Teleports you to the bartender job.", function()
+        Character:WaitForChild("HumanoidRootPart").CFrame = workspace.Map.Jobs.Bartender.BottleGroup.Bottle.CFrame * CFrame.new(0, teleportationOffset, 0)
+    end)
+    PlayerSection:NewButton("InAndOut Job", "Teleports you to the InAndOut job.", function()
+        Character:WaitForChild("HumanoidRootPart").CFrame = workspace.Map.Jobs.InAndOut.FrieWork.CFrame * CFrame.new(0, teleportationOffset, 0)
+    end)
+else
+    notification("GUI", "GUI could not load because you are not in the correct game.", 5)
+end
