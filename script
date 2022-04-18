@@ -2,6 +2,10 @@ local StarterGui = game:GetService("StarterGui")
 local Player = game.Players.LocalPlayer
 local Character = Player.Character or Player.CharacterAdded:Wait()
 local teleportationOffset = 5
+local mouse = Player:GetMouse()
+local stopAimbot = false
+local camera = workspace.CurrentCamera
+local dif = false
 
 function notification(title, text, duration)
 	StarterGui:SetCore("SendNotification", {
@@ -58,33 +62,24 @@ if game.PlaceId == 7167319176 then
     end)
 
     AimbotSection:NewKeybind("Aimbot", "Aimbotting toggle", Enum.KeyCode.Q, function()
-        local mouse = Playeqr:GetMouse()
-        local stopAimbot = false
-        local camera = workspace.CurrentCamera
-        local uis = game:GetService("UserInputService")
-        local dif = false
-        local startergui = game:GetService("StarterGui")
 
         function aimbotting(target)
             if stopAimbot == false then
-                while wait() do
-                    if stopAimbot == false and target and target.Parent:FindFirstChild("Humanoid") then
+                game:GetService("RunService").RenderStepped:Connect(function()
+                    if stopAimbot == false or target and target.Parent:FindFirstChild("Humanoid") and not target.Parent:FindFirstChild("Humanoid").Dead then
                         camera.CFrame = CFrame.new(camera.CFrame.Position,target.Position)
                     else
-                        repeat wait()
-                            stopAimbot = false
-                        until stopAimbot == false
-                        break
+                        print("no")
+                        wait(10)
                     end
-                end
+                end)
             else
                 print("no")
             end
         end
+        
 
 
-        uis.InputEnded:Connect(function(input)
-            if input.KeyCode == Enum.KeyCode.Q then
                 if mouse.Target and mouse.Target ~= nil and mouse.Target.Parent:FindFirstChild("Humanoid") then
                     local target = mouse.Target.Parent:FindFirstChild("Head")
                     
@@ -95,11 +90,11 @@ if game.PlaceId == 7167319176 then
                     else
                         dif = false
                         stopAimbot = true
+                        camera.CameraType = Enum.CameraType.Scriptable
+                        camera.CameraType = Enum.CameraType.Custom
                         notification("Aimbot", "Aimbot disabled!", 2)
                     end
                 end
-            end
-        end)
     end)
 
     
